@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +33,7 @@ public class CompanyController {
         return new ResponseEntity<>(compServ.findByCompanyId(company_id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/companies")
     public ResponseEntity<Company> createCompany(@Valid @RequestBody Company company) {
          if (compRep.existsByName(company.getName())) {
@@ -39,11 +42,13 @@ public class CompanyController {
         return new ResponseEntity<>(compServ.createCompany(company), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/companies/{company_id}")
     public ResponseEntity<Company> updateCompany(@PathVariable Long company_id, @Valid @RequestBody Company company) {
         return new ResponseEntity<>(compServ.updateCompany(company_id, company), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/companies/{company_id}")
     public ResponseEntity<String> deleteCompany(@PathVariable Long company_id) {
         compServ.deleteCompany(company_id);

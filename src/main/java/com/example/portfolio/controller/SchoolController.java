@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api")
@@ -32,6 +33,7 @@ public class SchoolController {
         return new ResponseEntity<>(schServ.findBySchoolId(school_id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/schools")
     public ResponseEntity<School> createSchool(@Valid @RequestBody School school) {
         if (schRep.existsByName(school.getName())) {
@@ -40,11 +42,13 @@ public class SchoolController {
         return new ResponseEntity<>(schServ.createSchool(school), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/schools/{school_id}")
     public ResponseEntity<School> updateSchool(@PathVariable Long school_id, @Valid @RequestBody School school) {
         return new ResponseEntity<>(schServ.updateSchool(school_id, school), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/schools/{school_id}")
     public ResponseEntity<String> deleteSchool(@PathVariable Long school_id) {
         schServ.deleteSchool(school_id);

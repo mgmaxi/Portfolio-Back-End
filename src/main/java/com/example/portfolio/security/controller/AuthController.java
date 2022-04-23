@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -66,11 +67,13 @@ public class AuthController {
     @Autowired
     private SocialNetworkRepository socNetRep;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
     public List<User> getAccounts() {
         return userService.getUsers();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{user_id}")
     public ResponseEntity<User> findByUserId(@PathVariable Long user_id) {
         return new ResponseEntity<>(userService.findByUserId(user_id), HttpStatus.OK);

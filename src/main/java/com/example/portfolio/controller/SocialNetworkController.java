@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api")
@@ -26,16 +27,19 @@ public class SocialNetworkController {
         return socNetServ.findByPersonId(person_id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/socialnetworks/persons/{person_id}")
     public ResponseEntity<SocialNetwork> createSocialNetwork(@PathVariable Long person_id, @RequestBody SocialNetwork socialNetwork) {
         return new ResponseEntity<>(socNetServ.createSocialNetwork(person_id, socialNetwork), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/socialnetworks/{socialnetwork_id}/persons/{person_id}")
     public ResponseEntity<SocialNetwork> updateSocialNetwork(@PathVariable Long person_id, @PathVariable Long socialnetwork_id, @RequestBody SocialNetwork updatedSocialNetwork) {
         return new ResponseEntity<>(socNetServ.updateSocialNetwork(person_id, socialnetwork_id, updatedSocialNetwork), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/socialnetworks/{socialnetwork_id}")
     public ResponseEntity<String> deleteSocialNetwork(@PathVariable Long socialnetwork_id) {
         socNetServ.deleteSocialNetwork(socialnetwork_id);

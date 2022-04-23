@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 
 @RestController
 @RequestMapping("/api")
@@ -36,6 +38,7 @@ public class TechnologyController {
         return techServ.findByPersonId(person_id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/technologies")
     public ResponseEntity<Technology> createTechnology(@Valid @RequestBody Technology technology) {
          if (techRep.existsByName(technology.getName())) {
@@ -44,11 +47,13 @@ public class TechnologyController {
         return new ResponseEntity<>(techServ.createTechnology(technology), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/technologies/{technology_id}")
     public ResponseEntity<Technology> updateTechnology(@PathVariable Long technology_id, @Valid @RequestBody Technology technology) {
         return new ResponseEntity<>(techServ.updateTechnology(technology_id, technology), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/technologies/{technology_id}")
     public ResponseEntity deleteTechnology(@PathVariable Long technology_id) {
         techServ.deleteTechnology(technology_id);

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 
 @RestController
 @RequestMapping("/api")
@@ -31,16 +33,19 @@ public class ProjectController {
         return projServ.findByPersonId(person_id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/projects/persons/{person_id}")
     public ResponseEntity<Project> createProject(@PathVariable Long person_id, @Valid @RequestBody Project project) {
         return new ResponseEntity<>(projServ.createProject(person_id, project), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/projects/{project_id}/persons/{person_id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long person_id, @PathVariable Long project_id, @Valid @RequestBody Project updatedProject) {
         return new ResponseEntity<>(projServ.updateProject(person_id, project_id, updatedProject), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/projects/{project_id}/persons/{person_id}")
     public ResponseEntity<String> deleteProject(@PathVariable Long person_id, @PathVariable Long project_id) {
         projServ.deleteProject(person_id, project_id);
@@ -48,6 +53,7 @@ public class ProjectController {
     }
 
     // Delete ALL projects from person
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/projects/persons/{person_id}")
     public ResponseEntity<String> deleteAllProjectsFromPerson(@PathVariable Long person_id) {
         projServ.deleteAllProjectsFromPerson(person_id);
