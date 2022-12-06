@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 
 @RestController
 @RequestMapping("/api")
@@ -34,19 +32,16 @@ public class LanguageController {
         return lanServ.findByPersonId(person_id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/languages")
     public ResponseEntity<Language> createLanguage(@Valid @RequestBody Language language) {
         return new ResponseEntity<>(lanServ.createLanguage(language), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/languages/{language_id}")
     public ResponseEntity<Language> updateLanguage(@PathVariable Long language_id, @Valid @RequestBody Language language) {
         return new ResponseEntity<>(lanServ.updateLanguage(language_id, language), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/languages/{language_id}")
     public ResponseEntity<String> deleteLanguage(@PathVariable Long language_id) {
         lanServ.deleteLanguage(language_id);
